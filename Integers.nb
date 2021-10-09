@@ -1,0 +1,2632 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    111558,       2623]
+NotebookOptionsPosition[    110271,       2576]
+NotebookOutlinePosition[    110614,       2591]
+CellTagsIndexPosition[    110571,       2588]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"BeginPackage", "[", "\"\<Integers`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8423528353679686`*^9, 3.8423528718422627`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"npf", "::", "usage"}], "=", "\"\<npf[n,p,t]\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423528747633605`*^9, 3.8423528826303887`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Solution", "::", "usage"}], "=", "\"\<\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423532650241795`*^9, 3.8423532725189943`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Bootstrap", "::", "usage"}], "=", 
+  "\"\<Bootstrap[\[CapitalDelta],size,sgap]\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423528859873085`*^9, 3.8423529133729887`*^9}, {
+  3.842439655406708*^9, 3.8424396560248175`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"e", "::", "usage"}], "=", 
+  "\"\<e[l,n,\[CapitalDelta]]\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423529208856916`*^9, 3.842352950390373*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   SubscriptBox["e", "m"], "::", "usage"}], "=", 
+  "\"\<\!\(\*SubscriptBox[\(e\), \(m\)]\)[n,\[CapitalDelta]]\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423529527739797`*^9, 3.8423529720523973`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"new", "::", "usage"}], "=", "\"\<new\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.842352973088129*^9, 3.8423529826971025`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"fullset", "::", "usage"}], "=", "\"\<fullset\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.842352986611497*^9, 3.8423529988141675`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"Begin", "[", "\"\<Private`\>\"", "]"}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8423530104444923`*^9, 3.842353030424762*^9}}],
+
+Cell[BoxData[
+ RowBox[{"new", "=", 
+  "\"\<npf[n,a,t] evaluate the function \
+\!\(\*FractionBox[\(\*SuperscriptBox[SubscriptBox[\(f\), \(p\)], \(n\)] \((t)\
+\)\), \(n!\)]\)\n\ne[l,n,\[CapitalDelta]] give us the OPE coefficients for \
+the most general 4-point function with \
+\!\(\*SubscriptBox[\(\[CapitalDelta]\), \(\[Phi]\)]\)=\[CapitalDelta] in the \
+basis \[CapitalBeta]={(a,b,c)/a,b,c,\[CapitalDelta] \[Element] \
+\!\(\*SubscriptBox[\(\[CapitalZeta]\), \(\(\[GreaterEqual]\)\(0\)\)]\) && \
+a+b+c=2\[CapitalDelta]} \\n \\n \!\(\*SubscriptBox[\(e\), \(m\)]\)[n,\
+\[CapitalDelta]] give us the limit \!\(\*FractionBox[\(e[l, n, \
+\[CapitalDelta]]\), FractionBox[\(\*SqrtBox[\(2  \[Pi]\)] \
+\*SuperscriptBox[\((n + l)\), \(2  \[CapitalDelta] - \*FractionBox[\(3\), \(2\
+\)]\)]\), \(\*SuperscriptBox[\(2\), \(2  n + 2  l - \*FractionBox[\(3\), \
+\(2\)]\)] \*SuperscriptBox[\(Gamma[\[CapitalDelta]]\), \(2\)]\)]]\), l \
+\[Rule] \[Infinity]\n\nthe fullset give us all of the independent \
+coefficients in our 4-point function and Solution give us a rule with the \
+values found by the Bootstrap function \n\n\
+Bootstrap[\[CapitalDelta],size,sgap] searches for a 4-point function with \
+scalar gap \[GreaterEqual] 2sgap and positive OPE coefficients for the \
+operators with \!\(\*FractionBox[\(\[Tau]\), \(2\)]\) = n \[LessEqual] size \
+and J \[LessEqual] size\n\nit then tests to see if the solution found is \
+unitary.\>\""}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.842353031546674*^9, 3.8423532309715137`*^9}, {
+  3.842353283282503*^9, 3.8423535573770475`*^9}, {3.842439660904585*^9, 
+  3.8424396713958173`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Definitions", "Chapter",
+ CellChangeTimes->{{3.8421863357344913`*^9, 3.8421863383368273`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"norm", "[", "t_", "]"}], ":=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"t", "\[Equal]", "0"}], ",", 
+     FractionBox["1", "2"], ",", "1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"npf", "[", 
+    RowBox[{"n_", ",", "p_", ",", "t_"}], "]"}], ":=", 
+   RowBox[{"If", "[", 
+    RowBox[{
+     RowBox[{"n", ">", "1"}], ",", 
+     RowBox[{
+      FractionBox[
+       SuperscriptBox[
+        RowBox[{"Gamma", "[", 
+         RowBox[{"n", "+", "p"}], "]"}], "2"], 
+       RowBox[{
+        RowBox[{"n", "!"}], 
+        RowBox[{"Pochhammer", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"2", "p"}], "-", "1", "+", "n"}], ",", "n"}], "]"}]}]], 
+      RowBox[{"HypergeometricPFQRegularized", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "n"}], ",", 
+          RowBox[{
+           RowBox[{"2", "p"}], "+", "n", "-", "1"}], ",", 
+          RowBox[{
+           FractionBox["p", "2"], "-", "t"}]}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"p", ",", "p"}], "}"}], ",", "1"}], "]"}]}], ",", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"n", "\[GreaterEqual]", "0"}], ",", 
+       RowBox[{"1", "+", 
+        RowBox[{"n", 
+         RowBox[{"(", 
+          RowBox[{"t", "-", "1"}], ")"}]}]}], ",", "0"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"e", "[", 
+    RowBox[{"l_", ",", "n_", ",", "\[CapitalDelta]_"}], "]"}], ":=", 
+   RowBox[{"Sum", "[", 
+    RowBox[{
+     RowBox[{"2", " ", 
+      RowBox[{"norm", "[", 
+       RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+        FractionBox["i", "2"]}], "]"}], 
+      RowBox[{"a", "[", 
+       RowBox[{
+        RowBox[{"Min", "[", 
+         RowBox[{"i", ",", "j"}], "]"}], ",", 
+        RowBox[{"Min", "[", 
+         RowBox[{
+          RowBox[{"Max", "[", 
+           RowBox[{"i", ",", "j"}], "]"}], ",", 
+          RowBox[{
+           RowBox[{"2", "\[CapitalDelta]"}], "-", 
+           RowBox[{"(", 
+            RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+      RowBox[{"npf", "[", 
+       RowBox[{
+        RowBox[{"n", "+", "l", "-", "i"}], ",", "i", ",", 
+        RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+         FractionBox["i", "2"]}]}], "]"}], 
+      RowBox[{"npf", "[", 
+       RowBox[{
+        RowBox[{"n", "-", "i"}], ",", "i", ",", 
+        RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+         FractionBox["i", "2"]}]}], "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "0", ",", 
+       RowBox[{"2", "\[CapitalDelta]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"j", ",", "0", ",", 
+       RowBox[{"\[CapitalDelta]", "-", 
+        FractionBox["i", "2"]}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    SubscriptBox["e", "m"], "[", 
+    RowBox[{"n_", ",", "\[CapitalDelta]_"}], "]"}], ":=", 
+   RowBox[{"Sum", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"a", "[", 
+       RowBox[{"0", ",", 
+        RowBox[{"Min", "[", 
+         RowBox[{"i", ",", 
+          RowBox[{
+           RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], "]"}], 
+      RowBox[{"npf", "[", 
+       RowBox[{
+        RowBox[{"n", "-", "i"}], ",", "i", ",", 
+        RowBox[{"\[CapitalDelta]", "-", 
+         FractionBox["i", "2"]}]}], "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "0", ",", 
+       RowBox[{"2", "\[CapitalDelta]"}]}], "}"}]}], "]"}]}], ";"}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.8421863419851556`*^9, 3.842186587655552*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Bootstrap function", "Chapter",
+ CellChangeTimes->{{3.842186650966627*^9, 3.8421866651583705`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Bootstrap", "[", 
+   RowBox[{"\[CapitalDelta]_", ",", "size_", ",", "sgap_"}], "]"}], ":=", " ", 
+  RowBox[{
+  "Do", "[", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    RowBox[{"part", " ", "1"}], " ", "*)"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"fullset", " ", "=", " ", 
+      RowBox[{"DeleteDuplicates", "[", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{"a", "[", 
+           RowBox[{
+            RowBox[{"Min", "[", 
+             RowBox[{"i", ",", "j"}], "]"}], ",", 
+            RowBox[{"Min", "[", 
+             RowBox[{
+              RowBox[{"Max", "[", 
+               RowBox[{"i", ",", "j"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"2", "\[CapitalDelta]"}], "-", 
+               RowBox[{"(", 
+                RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "0", ",", 
+            RowBox[{"2", "\[CapitalDelta]"}]}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"j", ",", "0", ",", 
+            RowBox[{"\[CapitalDelta]", "-", 
+             FractionBox["i", "2"]}]}], "}"}]}], "]"}], "//", "Flatten"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Equation", " ", "=", " ", 
+      RowBox[{"Apply", "[", 
+       RowBox[{"And", ",", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"e", "[", 
+            RowBox[{"0", ",", "i", ",", "\[CapitalDelta]"}], "]"}], 
+           "\[Equal]", 
+           RowBox[{"KroneckerDelta", "[", 
+            RowBox[{"i", ",", "0"}], "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "0", ",", 
+            RowBox[{"sgap", "-", "1"}]}], "}"}]}], "]"}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Solution1", " ", "=", " ", 
+      RowBox[{
+       RowBox[{"Solve", "[", "Equation", "]"}], "//", "Flatten"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "[", "Solution1", "]"}], "\[Equal]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"Print", "[", "\"\<The gap cannot be reached\>\"", "]"}], ";",
+         " ", 
+        RowBox[{"Break", "[", "]"}], ";"}], ",", 
+       RowBox[{
+        RowBox[{"Print", "[", "\"\<Solution1 was found\>\"", "]"}], ";"}]}], 
+      "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"PartialSet", " ", "=", " ", 
+      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"i", "=", "0"}], ",", 
+       RowBox[{"i", "\[LessEqual]", 
+        RowBox[{"2", "\[CapitalDelta]"}]}], ",", 
+       RowBox[{"i", "++"}], ",", 
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"j", "=", "0"}], ",", 
+         RowBox[{"j", "\[LessEqual]", 
+          RowBox[{"\[CapitalDelta]", "-", 
+           FractionBox["i", "2"]}]}], ",", 
+         RowBox[{"j", "++"}], ",", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"D", "[", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"a", "[", 
+                 RowBox[{
+                  RowBox[{"Min", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], ",", 
+                  RowBox[{"Min", "[", 
+                   RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], "/.", 
+                "Solution1"}], ")"}], ",", 
+              RowBox[{"a", "[", 
+               RowBox[{
+                RowBox[{"Min", "[", 
+                 RowBox[{"i", ",", "j"}], "]"}], ",", 
+                RowBox[{"Min", "[", 
+                 RowBox[{
+                  RowBox[{"Max", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], ",", 
+                  RowBox[{
+                   RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                   RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}]}], 
+             "]"}], "\[Equal]", "1"}], ",", 
+           RowBox[{"AppendTo", "[", 
+            RowBox[{"PartialSet", ",", 
+             RowBox[{"a", "[", 
+              RowBox[{
+               RowBox[{"Min", "[", 
+                RowBox[{"i", ",", "j"}], "]"}], ",", 
+               RowBox[{"Min", "[", 
+                RowBox[{
+                 RowBox[{"Max", "[", 
+                  RowBox[{"i", ",", "j"}], "]"}], ",", 
+                 RowBox[{
+                  RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                  RowBox[{"(", 
+                   RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}]}], 
+            "]"}]}], "]"}]}], "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"PartialSet", "=", 
+      RowBox[{"DeleteDuplicates", "[", "PartialSet", "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"condition", " ", "=", " ", 
+      RowBox[{"Apply", "[", 
+       RowBox[{"And", ",", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"0", "<", 
+              RowBox[{"a", "[", 
+               RowBox[{"0", ",", "0"}], "]"}], "<", "1"}], "/.", 
+             "Solution1"}], "}"}], ")"}], "~", "Join", "~", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"e", "[", 
+               RowBox[{"l", ",", "n", ",", "\[CapitalDelta]"}], "]"}], 
+              "\[GreaterEqual]", "0"}], "/.", "Solution1"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "0", ",", "size"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"l", ",", "0", ",", "size", ",", "2"}], "}"}]}], "]"}], 
+          "~", "Join", "~", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               SubscriptBox["e", "m"], "[", 
+               RowBox[{"n", ",", "\[CapitalDelta]"}], "]"}], ">", "0"}], "/.",
+              "Solution1"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "0", ",", "size"}], "}"}]}], "]"}]}], "//", 
+         "Flatten"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Solution2", "=", 
+      RowBox[{
+       RowBox[{"FindInstance", "[", 
+        RowBox[{"condition", ",", "PartialSet"}], "]"}], "//", "Flatten"}]}], 
+     ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Length", "[", "Solution2", "]"}], "\[Equal]", "0"}], ",", 
+       RowBox[{
+        RowBox[{"Print", "[", "\"\<There is no unitary solution\>\"", "]"}], 
+        ";", 
+        RowBox[{"Break", "[", "]"}], ";"}], ",", 
+       RowBox[{
+        RowBox[{"Print", "[", "\"\<Solution2 was found\>\"", "]"}], ";"}]}], 
+      "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Solution", "=", 
+      RowBox[{"Union", "[", 
+       RowBox[{
+        RowBox[{"Solution1", "/.", "Solution2"}], ",", "Solution2"}], "]"}]}],
+      ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", "part2", " ", "*)"}], "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"stopN", "=", 
+      RowBox[{"Max", "[", 
+       RowBox[{
+        RowBox[{"2", 
+         RowBox[{"Ceiling", "[", 
+          FractionBox[
+           RowBox[{
+            RowBox[{
+             SqrtBox["2"], 
+             SuperscriptBox["\[CapitalDelta]", 
+              FractionBox["3", "2"]]}], "+", 
+            FractionBox["\[CapitalDelta]", "4"], "-", 
+            RowBox[{
+             FractionBox["95", 
+              RowBox[{"32", 
+               SqrtBox["2"]}]], 
+             SuperscriptBox["\[CapitalDelta]", 
+              FractionBox["1", "2"]]}], "-", 
+            FractionBox["9", "8"]}], "2"], "]"}]}], ",", 
+        RowBox[{"2", 
+         RowBox[{"Ceiling", "[", 
+          FractionBox["size", "2"], "]"}]}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"stopL", "=", 
+      RowBox[{"Max", "[", 
+       RowBox[{
+        RowBox[{"2", 
+         RowBox[{"Ceiling", "[", 
+          FractionBox[
+           RowBox[{
+            RowBox[{
+             SqrtBox["2"], 
+             SuperscriptBox["\[CapitalDelta]", 
+              FractionBox["3", "2"]]}], "+", 
+            FractionBox["\[CapitalDelta]", "4"], "-", 
+            RowBox[{
+             FractionBox["95", 
+              RowBox[{"32", 
+               SqrtBox["2"]}]], 
+             SuperscriptBox["\[CapitalDelta]", 
+              FractionBox["1", "2"]]}], "-", 
+            FractionBox["9", "8"]}], "2"], "]"}]}], ",", 
+        RowBox[{"2", 
+         RowBox[{"Ceiling", "[", 
+          FractionBox["size", "2"], "]"}]}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Positivity", "=", "0"}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Test1", "=", 
+      RowBox[{"Apply", "[", 
+       RowBox[{"And", ",", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"Sum", "[", 
+             RowBox[{
+              RowBox[{"a", "[", 
+               RowBox[{"0", ",", 
+                RowBox[{"Min", "[", 
+                 RowBox[{"i", ",", 
+                  RowBox[{
+                   RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+               "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+            "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "0", ",", 
+            RowBox[{
+             RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}]}], "}"}]}], "]"}]}],
+        "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Test2", "=", 
+      RowBox[{"Apply", "[", 
+       RowBox[{"And", ",", 
+        RowBox[{"Table", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"norm", "[", 
+               RowBox[{
+                RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], "]"}], 
+              RowBox[{"a", "[", 
+               RowBox[{
+                RowBox[{"Min", "[", 
+                 RowBox[{"k", ",", "1"}], "]"}], ",", 
+                RowBox[{"Min", "[", 
+                 RowBox[{
+                  RowBox[{"Max", "[", 
+                   RowBox[{"1", ",", "k"}], "]"}], ",", 
+                  RowBox[{
+                   RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                 "]"}]}], "]"}]}], "+", 
+             RowBox[{"Sum", "[", 
+              RowBox[{
+               RowBox[{"a", "[", 
+                RowBox[{"0", ",", 
+                 RowBox[{"Min", "[", 
+                  RowBox[{"i", ",", 
+                   RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                "]"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}]}], 
+            "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "0", ",", 
+            RowBox[{
+             RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}]}], "}"}]}], "]"}]}],
+        "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"Test1", "&&", "Test2"}], ",", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"list", "=", 
+         RowBox[{
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"a", "[", 
+             RowBox[{
+              RowBox[{"Min", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                 RowBox[{"2", "j"}], "-", "i"}], ",", "j"}], "]"}], ",", 
+              RowBox[{"Min", "[", 
+               RowBox[{
+                RowBox[{"Max", "[", 
+                 RowBox[{"i", ",", "j"}], "]"}], ",", 
+                RowBox[{
+                 RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"-", "i"}], "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+            RowBox[{"(*", 
+             RowBox[{"npf", "[", 
+              RowBox[{
+               RowBox[{"stopN", "-", "i"}], ",", "i", ",", 
+               RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                FractionBox["i", "2"]}]}], "]"}], "*)"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"i", ",", 
+              RowBox[{
+               RowBox[{"2", "\[CapitalDelta]"}], "-", 
+               RowBox[{"2", "j"}]}], ",", "0", ",", 
+              RowBox[{"-", "1"}]}], "}"}]}], "]"}], "/.", "Solution"}]}], ";",
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        RowBox[{"brake", "=", "False"}], ";", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "1"}], ",", 
+          RowBox[{"i", "\[LessEqual]", 
+           RowBox[{"Length", "[", "list", "]"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{
+           RowBox[{"For", "[", 
+            RowBox[{
+             RowBox[{"j", "=", "1"}], ",", 
+             RowBox[{"j", "\[LessEqual]", 
+              RowBox[{"Length", "[", 
+               RowBox[{
+               "list", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}],
+                "]"}]}], ",", 
+             RowBox[{"j", "++"}], ",", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{"brake", ",", 
+                RowBox[{
+                 RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";", " ", 
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"list", "\[LeftDoubleBracket]", 
+                    RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "<", 
+                   "0"}], ")"}], "||", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"i", "\[Equal]", 
+                    RowBox[{"Length", "[", "list", "]"}]}], "&&", 
+                   RowBox[{"j", "\[Equal]", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    "list", "\[LeftDoubleBracket]", "i", 
+                    "\[RightDoubleBracket]"}], "]"}]}]}], ")"}]}], ",", 
+                RowBox[{
+                 RowBox[{"brake", "=", "True"}], ";", " ", 
+                 RowBox[{"value", "=", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"i", "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "1"}], ")"}]}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"j", "-", "1"}], ")"}]}]}], "}"}]}], ";", 
+                 RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";"}]}], "]"}], 
+           ";"}]}], "]"}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Monitor", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"While", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"1", "+", 
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", "0"}], "]"}]}], ")"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"2", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "j"}], ",", "j", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["j", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], ")"}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", "j"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[GreaterEqual]", "i"}], 
+                    ")"}], "||", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "<", "j"}], ")"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ")"}], "||", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"1", "-", 
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", "0"}], "]"}]}], ")"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "2"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"2", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "2"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k", "+", "1"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "j", "+", "1"}], ",", "j", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["j", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k", "+", "1"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], ")"}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", "j"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[GreaterEqual]", "i"}], 
+                    ")"}], "||", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "<", "j"}], ")"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "i", "+", "1"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ")"}]}], ",", 
+             RowBox[{
+              RowBox[{"Positivity", "+=", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"0", ",", "stopN", ",", "\[CapitalDelta]"}], 
+                    "]"}], "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}], "+", 
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"stopN", "+", "1"}], ",", "\[CapitalDelta]"}], 
+                    "]"}], "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}]}]}], 
+              ";", " ", 
+              RowBox[{"stopN", "+=", "2"}], ";"}]}], "]"}], ";"}], ",", 
+          "stopN"}], "]"}], ";"}], "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Monitor", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"While", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"1", "+", 
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", "0"}], "]"}]}], ")"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], "2", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}],
+                     "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "j"}], ",", "j", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["j", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], ")"}]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ")"}], "||", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{"1", "-", 
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", "0"}], "]"}]}], ")"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "2"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], "2", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "2"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k", "+", "1"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}],
+                     "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"KroneckerDelta", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "1"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2", "-", "k"}], 
+                    "]"}]}], "+", 
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"k", ",", "j"}], "]"}]}], "}"}]}], "]"}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "j", "+", "1"}], ",", "j", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["j", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "k", "+", "1"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], ")"}]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    SuperscriptBox[
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stopN", "-", "i", "+", "1"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], "2"]}], "/.", 
+                    "Solution"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ")"}]}], ",", 
+             RowBox[{
+              RowBox[{"Positivity", "+=", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"0", ",", "stopN", ",", "\[CapitalDelta]"}], 
+                    "]"}], "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}], "+", 
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"stopN", "+", "1"}], ",", "\[CapitalDelta]"}], 
+                    "]"}], "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}]}]}], 
+              ";", " ", 
+              RowBox[{"stopN", "+=", "2"}], ";"}]}], "]"}], ";"}], ",", 
+          "stopN"}], "]"}], ";"}]}], "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"stopLlist", "=", 
+      RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"For", "[", 
+      RowBox[{
+       RowBox[{"n", "=", "0"}], ",", 
+       RowBox[{"n", "<", "stopN"}], ",", 
+       RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"n", "\[LessEqual]", "stopL"}], ",", "\[IndentingNewLine]", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"stop", "=", "stopL"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"list", "=", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"Sum", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                   RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"2", "\[CapitalDelta]"}]}], "}"}]}], "]"}], "}"}],
+                ",", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                   RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"k", ",", 
+                   RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                   ",", 
+                   RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", "Join",
+              "~", 
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"norm", "[", 
+                 RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                  FractionBox["i", "2"]}], "]"}], 
+                RowBox[{"a", "[", 
+                 RowBox[{
+                  RowBox[{"Min", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], ",", 
+                  RowBox[{"Min", "[", 
+                   RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                RowBox[{"npf", "[", 
+                 RowBox[{
+                  RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                  RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                   FractionBox["i", "2"]}]}], "]"}]}], ",", 
+               RowBox[{"{", 
+                RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i", ",", 
+                 RowBox[{
+                  RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                  RowBox[{"2", "j"}]}], ",", "0", ",", 
+                 RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "/.", "Solution"}]}],
+           ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"brake", "=", "False"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"For", "[", 
+           RowBox[{
+            RowBox[{"i", "=", "2"}], ",", 
+            RowBox[{"i", "\[LessEqual]", 
+             RowBox[{"Length", "[", "list", "]"}]}], ",", 
+            RowBox[{"i", "++"}], ",", 
+            RowBox[{
+             RowBox[{"For", "[", 
+              RowBox[{
+               RowBox[{"j", "=", "1"}], ",", 
+               RowBox[{"j", "\[LessEqual]", 
+                RowBox[{"Length", "[", 
+                 RowBox[{
+                 "list", "\[LeftDoubleBracket]", "i", 
+                  "\[RightDoubleBracket]"}], "]"}]}], ",", 
+               RowBox[{"j", "++"}], ",", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{"brake", ",", 
+                  RowBox[{
+                   RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";", " ", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"list", "\[LeftDoubleBracket]", 
+                    RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "<", 
+                    "0"}], ")"}], "||", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"i", "\[Equal]", 
+                    RowBox[{"Length", "[", "list", "]"}]}], "&&", 
+                    RowBox[{"j", "\[Equal]", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    "list", "\[LeftDoubleBracket]", "i", 
+                    "\[RightDoubleBracket]"}], "]"}]}]}], ")"}]}], ",", 
+                  RowBox[{
+                   RowBox[{"brake", "=", "True"}], ";", " ", 
+                   RowBox[{"value", "=", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "j"}], "}"}]}], ";", 
+                   RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";"}]}], 
+              "]"}], ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"Monitor", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"While", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"2", "\[CapitalDelta]"}]}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}]}], "/.", "Solution"}], 
+                    "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", "2"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                    RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                    RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{"j", "+", "1"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}], "+", "1", "-", "i"}]}], ")"}], "||", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "<", 
+                    RowBox[{"j", "+", "1"}]}], ")"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ",", 
+               RowBox[{
+                RowBox[{"Positivity", "+=", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"stop", ",", "n", ",", "\[CapitalDelta]"}], "]"}],
+                     "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}]}], 
+                ";", " ", 
+                RowBox[{"stop", "+=", "2"}], ";"}]}], "]"}], ";"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "stop"}], "}"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"stopLlist", ",", "stop"}], "]"}], ";"}], 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+         "\[IndentingNewLine]", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"stop", "=", "0"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"list", "=", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"Sum", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                   RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"2", "\[CapitalDelta]"}]}], "}"}]}], "]"}], "}"}],
+                ",", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                   RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"k", ",", 
+                   RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                   ",", 
+                   RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", "Join",
+              "~", 
+             RowBox[{"Table", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"norm", "[", 
+                 RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                  FractionBox["i", "2"]}], "]"}], 
+                RowBox[{"a", "[", 
+                 RowBox[{
+                  RowBox[{"Min", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], ",", 
+                  RowBox[{"Min", "[", 
+                   RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                RowBox[{"npf", "[", 
+                 RowBox[{
+                  RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                  RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                   FractionBox["i", "2"]}]}], "]"}]}], ",", 
+               RowBox[{"{", 
+                RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"i", ",", 
+                 RowBox[{
+                  RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                  RowBox[{"2", "j"}]}], ",", "0", ",", 
+                 RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "/.", "Solution"}]}],
+           ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"brake", "=", "False"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"For", "[", 
+           RowBox[{
+            RowBox[{"i", "=", "2"}], ",", 
+            RowBox[{"i", "\[LessEqual]", 
+             RowBox[{"Length", "[", "list", "]"}]}], ",", 
+            RowBox[{"i", "++"}], ",", 
+            RowBox[{
+             RowBox[{"For", "[", 
+              RowBox[{
+               RowBox[{"j", "=", "1"}], ",", 
+               RowBox[{"j", "\[LessEqual]", 
+                RowBox[{"Length", "[", 
+                 RowBox[{
+                 "list", "\[LeftDoubleBracket]", "i", 
+                  "\[RightDoubleBracket]"}], "]"}]}], ",", 
+               RowBox[{"j", "++"}], ",", 
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{"brake", ",", 
+                  RowBox[{
+                   RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";", " ", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"list", "\[LeftDoubleBracket]", 
+                    RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}], "<", 
+                    "0"}], ")"}], "||", 
+                   RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"i", "\[Equal]", 
+                    RowBox[{"Length", "[", "list", "]"}]}], "&&", 
+                    RowBox[{"j", "\[Equal]", 
+                    RowBox[{"Length", "[", 
+                    RowBox[{
+                    "list", "\[LeftDoubleBracket]", "i", 
+                    "\[RightDoubleBracket]"}], "]"}]}]}], ")"}]}], ",", 
+                  RowBox[{
+                   RowBox[{"brake", "=", "True"}], ";", " ", 
+                   RowBox[{"value", "=", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "j"}], "}"}]}], ";", 
+                   RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";"}]}], 
+              "]"}], ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"Monitor", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"While", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", 
+                    RowBox[{"2", "\[CapitalDelta]"}]}], "}"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", 
+                    RowBox[{"2", "\[CapitalDelta]"}], "+", "1"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1"}], ",", 
+                    FractionBox["1", "2"]}], "]"}]}], "/.", "Solution"}], 
+                    "}"}], ",", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", "2"}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                    RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"Sum", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"0", ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "i"}]}], "]"}]}], 
+                    "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "0", ",", "k"}], "}"}]}], "]"}], "+", 
+                    RowBox[{
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"1", ",", "k"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "1", "-", "k"}]}], 
+                    "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}]}], ")"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", "k"}], ",", "k", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "1", "-", 
+                    FractionBox["k", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"k", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", "2"}], ",", "0", 
+                    ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "}"}], "~", 
+                    "Join", "~", 
+                    RowBox[{"Table", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{"j", "+", "1"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "2", 
+                    "\[RightDoubleBracket]"}], "\[LessEqual]", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}], "+", "1", "-", "k"}]}], ")"}], "||", 
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{
+                    "value", "\[LeftDoubleBracket]", "1", 
+                    "\[RightDoubleBracket]"}], "<", 
+                    RowBox[{"j", "+", "1"}]}], ")"}]}], ",", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], ",", "0", 
+                    ",", "1"}], "]"}], ",", "1"}], "]"}], ",", "1"}], "]"}], 
+                    RowBox[{"norm", "[", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}], "]"}], 
+                    RowBox[{"a", "[", 
+                    RowBox[{
+                    RowBox[{"Min", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{"Min", "[", 
+                    RowBox[{
+                    RowBox[{"Max", "[", 
+                    RowBox[{"i", ",", "j"}], "]"}], ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"(", 
+                    RowBox[{"i", "+", "j"}], ")"}]}]}], "]"}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}], 
+                    RowBox[{"npf", "[", 
+                    RowBox[{
+                    RowBox[{"stop", "+", "n", "-", "i"}], ",", "i", ",", 
+                    RowBox[{"\[CapitalDelta]", "-", "j", "-", 
+                    FractionBox["i", "2"]}]}], "]"}]}], "/.", "Solution"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"j", ",", "2", ",", "\[CapitalDelta]"}], "}"}], 
+                    ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", 
+                    RowBox[{
+                    RowBox[{"2", "\[CapitalDelta]"}], "-", 
+                    RowBox[{"2", "j"}]}], ",", "0", ",", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "]"}]}], "//", "Flatten"}],
+                   "//", "Total"}], ")"}], "<", "0"}], ",", 
+               RowBox[{
+                RowBox[{"Positivity", "+=", 
+                 RowBox[{"(", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"stop", ",", "n", ",", "\[CapitalDelta]"}], "]"}],
+                     "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ")"}]}], 
+                ";", 
+                RowBox[{"stop", "+=", "2"}], ";"}]}], "]"}], ";"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"n", ",", "stop"}], "}"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"AppendTo", "[", 
+           RowBox[{"stopLlist", ",", "stop"}], "]"}], ";"}]}], 
+        "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+        "]"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"Positivity", "\[Equal]", "0"}], ",", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Monitor", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Positivity", "+=", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"e", "[", 
+                    RowBox[{"l", ",", "n", ",", "\[CapitalDelta]"}], "]"}], 
+                    "\[GreaterEqual]", "0"}], "/.", "Solution"}], "/.", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"True", "\[Rule]", "0"}], ",", 
+                    RowBox[{"False", "\[Rule]", "1"}]}], "}"}]}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"n", ",", "0", ",", 
+                   RowBox[{"Max", "[", 
+                    RowBox[{
+                    RowBox[{"2", 
+                    RowBox[{"Ceiling", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{
+                    SqrtBox["2"], 
+                    SuperscriptBox["\[CapitalDelta]", 
+                    FractionBox["3", "2"]]}], "+", 
+                    FractionBox["\[CapitalDelta]", "4"], "-", 
+                    RowBox[{
+                    FractionBox["95", 
+                    RowBox[{"32", 
+                    SqrtBox["2"]}]], 
+                    SuperscriptBox["\[CapitalDelta]", 
+                    FractionBox["1", "2"]]}], "-", 
+                    FractionBox["9", "8"]}], "2"], "]"}]}], ",", 
+                    RowBox[{"2", 
+                    RowBox[{"Ceiling", "[", 
+                    FractionBox["size", "2"], "]"}]}]}], "]"}]}], "}"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"l", ",", 
+                   RowBox[{"2", 
+                    RowBox[{"Ceiling", "[", 
+                    FractionBox["size", "2"], "]"}], 
+                    RowBox[{"HeavisideTheta", "[", 
+                    RowBox[{"size", "-", "n", "+", 
+                    FractionBox["1", "2"]}], "]"}]}], ",", 
+                   RowBox[{"Max", "[", 
+                    RowBox[{
+                    RowBox[{"2", 
+                    RowBox[{"Ceiling", "[", 
+                    FractionBox[
+                    RowBox[{
+                    RowBox[{
+                    SqrtBox["2"], 
+                    SuperscriptBox["\[CapitalDelta]", 
+                    FractionBox["3", "2"]]}], "+", 
+                    FractionBox["\[CapitalDelta]", "4"], "-", 
+                    RowBox[{
+                    FractionBox["95", 
+                    RowBox[{"32", 
+                    SqrtBox["2"]}]], 
+                    SuperscriptBox["\[CapitalDelta]", 
+                    FractionBox["1", "2"]]}], "-", 
+                    FractionBox["9", "8"]}], "2"], "]"}]}], ",", 
+                    RowBox[{"2", 
+                    RowBox[{"Ceiling", "[", 
+                    FractionBox["size", "2"], "]"}]}]}], "]"}], ",", "2"}], 
+                  "}"}]}], "]"}], "//", "Flatten"}], "//", "Total"}], ")"}]}],
+            ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"n", ",", "l"}], "}"}]}], "]"}], ";"}], 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", ",", " ", 
+       RowBox[{
+        RowBox[{"Print", "[", 
+         RowBox[{
+         "\"\<The number of negative OPE coefficients is \>\"", ",", 
+          "Positivity"}], "]"}], ";", 
+        RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"Print", "[", 
+      RowBox[{
+      "\"\<The number of negative OPE coefficients is \>\"", ",", 
+       "Positivity"}], "]"}], ";"}], "\[IndentingNewLine]", 
+    "\[IndentingNewLine]", "\[IndentingNewLine]", ",", 
+    RowBox[{"{", "1", "}"}]}], "]"}]}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.842186667227856*^9, 3.8421868570162063`*^9}, {
+   3.8421868915361195`*^9, 3.8421875065452557`*^9}, {3.8421939187482386`*^9, 
+   3.8421940920956945`*^9}, {3.842194163981395*^9, 3.842194266321107*^9}, {
+   3.8421942981059227`*^9, 3.8421944026276464`*^9}, {3.842194453379615*^9, 
+   3.8421944819698744`*^9}, {3.84219453699691*^9, 3.8421945410433683`*^9}, {
+   3.842194677827705*^9, 3.8421946918436437`*^9}, 3.8421949797519207`*^9, {
+   3.8421950308600492`*^9, 3.8421950401907315`*^9}, {3.8421951241252346`*^9, 
+   3.8421951913398542`*^9}, {3.8421952376567316`*^9, 
+   3.8421952620188975`*^9}, {3.842195337057523*^9, 3.8421953668540597`*^9}, {
+   3.8421954093131747`*^9, 3.8421954401988945`*^9}, 3.842195505687414*^9, {
+   3.8421955482425995`*^9, 3.842195564719454*^9}, {3.842195635620304*^9, 
+   3.8421957509867744`*^9}, {3.842195868772037*^9, 3.8421961924349713`*^9}, 
+   3.842196289082158*^9, {3.8421963917717237`*^9, 3.842196470801925*^9}, {
+   3.8421966922830706`*^9, 3.8421967778003693`*^9}, {3.8421969701260924`*^9, 
+   3.8421971945593424`*^9}, {3.842197275093912*^9, 3.842197387350279*^9}, {
+   3.8421974256465282`*^9, 3.8421974365406113`*^9}, 3.842197475694053*^9, {
+   3.8421975662437153`*^9, 3.842197568123021*^9}, {3.8421977313925447`*^9, 
+   3.842197842749125*^9}, {3.8421978828241405`*^9, 3.8421979703622627`*^9}, {
+   3.842198003389581*^9, 3.842198032949772*^9}, {3.8421980734136844`*^9, 
+   3.842198177639385*^9}, {3.842198244255615*^9, 3.8421982913954744`*^9}, {
+   3.842198329233328*^9, 3.8421983669704847`*^9}, {3.842198403604685*^9, 
+   3.84219843165061*^9}, {3.8421984782573266`*^9, 3.842198594135326*^9}, {
+   3.842204385143446*^9, 3.84220439470182*^9}, {3.8422044460518913`*^9, 
+   3.842204532382511*^9}, {3.842204564126459*^9, 3.8422046476745853`*^9}, {
+   3.8422046862984395`*^9, 3.842204717266429*^9}, {3.8422047844529943`*^9, 
+   3.8422049222999325`*^9}, {3.842205004209337*^9, 3.842205134922694*^9}, {
+   3.842205166112149*^9, 3.842205318391983*^9}, {3.8422055697505856`*^9, 
+   3.8422055845806446`*^9}, {3.842206075919791*^9, 3.8422062030802054`*^9}, {
+   3.8422062371681824`*^9, 3.8422064933116937`*^9}, {3.8422065481138887`*^9, 
+   3.842206558094427*^9}, {3.8422066119400434`*^9, 3.842206657763727*^9}, {
+   3.8422067104184284`*^9, 3.8422067463459635`*^9}, {3.8422067965197935`*^9, 
+   3.842206872118984*^9}, {3.8422069060488515`*^9, 3.8422069450134997`*^9}, {
+   3.8422069994641523`*^9, 3.8422070065011168`*^9}, {3.8422070698571997`*^9, 
+   3.842207085697051*^9}, {3.8422071240487037`*^9, 3.8422076486853175`*^9}, {
+   3.8422076864320726`*^9, 3.842207703109019*^9}, {3.8422077362286053`*^9, 
+   3.842207738966539*^9}, {3.8422077987010045`*^9, 3.8422081226917763`*^9}, {
+   3.842208287326388*^9, 3.842208290199603*^9}, {3.8422083854651775`*^9, 
+   3.8422083970865297`*^9}, {3.8422084474711933`*^9, 3.842208508753071*^9}, {
+   3.842208539138796*^9, 3.8422085901458025`*^9}, 3.842208652863867*^9, {
+   3.8422088145819206`*^9, 3.842208831687794*^9}, {3.8422101361954927`*^9, 
+   3.8422101390838394`*^9}, {3.842210238927226*^9, 3.8422103048773017`*^9}, {
+   3.8422156604667377`*^9, 3.8422156977894335`*^9}, {3.8422157502364864`*^9, 
+   3.8422157591882095`*^9}, {3.84221578979893*^9, 3.8422158713715982`*^9}, {
+   3.8422549667094088`*^9, 3.842255060825905*^9}, {3.8422551158045053`*^9, 
+   3.8422551783422823`*^9}, 3.8422554246115074`*^9, 3.8422555180229387`*^9, 
+   3.842255550395362*^9, {3.8422555969883304`*^9, 3.8422556219360576`*^9}, {
+   3.842255673117572*^9, 3.84225569231709*^9}, {3.8422557307282953`*^9, 
+   3.8422557337673674`*^9}, {3.8422558262971406`*^9, 
+   3.8422558347272034`*^9}, {3.8422559135639644`*^9, 
+   3.8422559191279287`*^9}, {3.842256019662242*^9, 3.842256025167189*^9}, {
+   3.842256083304122*^9, 3.8422560837582903`*^9}, {3.842256118626418*^9, 
+   3.8422561272981844`*^9}, 3.842256158058137*^9, {3.8422564553864555`*^9, 
+   3.842256488508227*^9}, {3.842256615491416*^9, 3.842256642989235*^9}, {
+   3.8422566904557467`*^9, 3.8422569037783813`*^9}, {3.8422571546966076`*^9, 
+   3.842257173048217*^9}, {3.842257203354336*^9, 3.842257207838241*^9}, {
+   3.842258374953986*^9, 3.8422584054273167`*^9}, {3.8422584671022778`*^9, 
+   3.8422584861621265`*^9}, {3.842259820519664*^9, 3.842259850602783*^9}, 
+   3.8422603826451797`*^9, 3.8422605442503567`*^9, {3.842261536664014*^9, 
+   3.842261538853539*^9}, {3.8423534105090075`*^9, 3.842353410678295*^9}, {
+   3.8423625711421323`*^9, 3.8423626310123453`*^9}, 3.8423705778314238`*^9, 
+   3.842390220098518*^9, 3.842390706973147*^9, {3.8424396716358504`*^9, 
+   3.842439671671852*^9}}]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Test", "Chapter",
+ CellChangeTimes->{{3.8422081412451797`*^9, 3.8422081419363885`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"End", "[", "]"}], ";"}]], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.842353617380653*^9, 3.8423536193524756`*^9}, 
+   3.842362563290394*^9}],
+
+Cell[BoxData[
+ RowBox[{"EndPackage", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.8423536215417786`*^9, 3.842353624243703*^9}}]
+}, Open  ]]
+},
+WindowSize->{1920, 1037},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 151, 2, 31, "Input"],
+Cell[712, 24, 193, 4, 31, "Input",
+ InitializationCell->True],
+Cell[908, 30, 188, 4, 31, "Input",
+ InitializationCell->True],
+Cell[1099, 36, 279, 6, 31, "Input",
+ InitializationCell->True],
+Cell[1381, 44, 204, 5, 31, "Input",
+ InitializationCell->True],
+Cell[1588, 51, 260, 6, 31, "Input",
+ InitializationCell->True],
+Cell[1851, 59, 184, 4, 31, "Input",
+ InitializationCell->True],
+Cell[2038, 65, 192, 4, 31, "Input",
+ InitializationCell->True],
+Cell[2233, 71, 168, 3, 31, "Input",
+ InitializationCell->True],
+Cell[2404, 76, 1632, 26, 321, "Input",
+ InitializationCell->True],
+Cell[CellGroupData[{
+Cell[4061, 106, 100, 1, 64, "Chapter"],
+Cell[4164, 109, 3576, 108, 193, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[7777, 222, 105, 1, 53, "Chapter"],
+Cell[7885, 225, 101918, 2331, 4385, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[109840, 2561, 93, 1, 53, "Chapter"],
+Cell[109936, 2564, 190, 5, 31, "Input",
+ InitializationCell->True],
+Cell[110129, 2571, 126, 2, 31, "Input"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
